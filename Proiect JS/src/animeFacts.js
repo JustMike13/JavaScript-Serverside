@@ -8,7 +8,7 @@ const animeFacts = async (req, res) => {
         movie_banner,
         description,
     }));
-
+    
     res.send(facts);
 }
 
