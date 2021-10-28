@@ -12,8 +12,21 @@ module.exports.getAllUsers = async (req, res)=> {
     }
 }
 
-module.exports.getUserById = (req, res)=> {
-    
+module.exports.getUserById = async ({ params }, res)=> {
+    const { id } = params;
+    try {
+        const user = await db.User.findAll({
+            where:{
+                id: id,
+            }
+        })
+        res.status(302).send(user);
+    } catch (error) {
+        console.error(error);
+        res.send({
+            error: 'Something went wrong',
+        });
+    }
 }
 
 module.exports.createUser = async (req, res) => {
@@ -37,15 +50,51 @@ module.exports.createUser = async (req, res) => {
             error: 'Something went wrong',
         });
     };
-
-    
-
 }
 
-module.exports.updateUser = (req, res)=> {
+module.exports.updateUser = async ({ params, body }, res) => {
+    const {id} = params;
+    const {email, firstName, lastName, createdAt} = body;
+    let updatedAt = new Date();
+    try {
+        const newUser = {
+            id,
+            email,
+            firstName,
+            lastName,
+            createdAt,
+            updatedAt
+        }
+        await db.User.update(newUser,{
+                where: {
+                    id,
+                }
+            })
+        res.status(202).send(newUser);
+    } catch (error) {
+        console.error(error);
+        res.send({
+            error: 'Something went wrong',
+        });
+    }
     
 }
 
-module.exports.deleteUser = (req, res)=> {
-    
+module.exports.deleteUser = async ({ params }, res) => {
+    const { id } = params;
+    try {
+        await db.User.destroy({
+            where: {
+                id: id
+            }
+        });
+        res.status(202).send({
+            status: 'Deleted user with id: ' + id,
+        });
+    } catch (error) {
+        console.error(error);
+        res.send({
+            error: 'Something went wrong',
+        });
+    }
 }
