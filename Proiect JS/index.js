@@ -7,6 +7,7 @@ const authorizationMiddleware = require('./middlewares/authorization');
 const loginHandler = require('./controllers/login');
 
 const { getAllUsers, getUserById, createUser, updateUser, deleteUser} = require('./controllers/users');
+const { getAllPosts, addTagToPost, getPostById, createPost, updatePost, deletePost, getUser} = require('./controllers/posts');
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,7 +25,16 @@ app.post("/users", createUser);
 app.put("/users/:id", updateUser);
 app.delete("/users/:id", deleteUser);
 
+app.post("/users/:id/posts", createPost);
+
+app.get("/post", getAllPosts);
+app.get("/post/:id", getPostById)
+app.put("/post/:id", updatePost);
+app.delete("/post/:id", deletePost);
+
+app.post("/posts/:postId/tags/:tagId", addTagToPost)
+
 
 app.listen(port, () => {
-    console.log("Server started on", port);
+    console.log("localhost:3000");
 });
